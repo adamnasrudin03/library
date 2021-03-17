@@ -4,6 +4,7 @@ import (
 	"github.com/adamnasrudin03/library/config"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 	"gorm.io/gorm"
 )
 
