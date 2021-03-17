@@ -16,3 +16,6 @@
 
 # Mac OS X files
 .DS_Store
+
+# Setup private environment
+.env
