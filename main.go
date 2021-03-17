@@ -1,9 +1,17 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/adamnasrudin03/library/config"
+	"github.com/gin-gonic/gin"
+)
 
+var (
+	db             *gorm.DB                  = config.SetupDbConnection()
+)
 
 func main() {
+	defer config.CloseDbConnection(db)
+
 	router := gin.Default()
 
 	router.Use(cors.Default())
