@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/adamnasrudin03/library/config"
+
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var (
