@@ -1,0 +1,40 @@
+* publisher
+    - id: int
+    - name: varchar
+    - position: varchar 
+    - email: varchar 
+    - password: varchar 
+    - created_at: datetime
+	- updated_at: datetime
+
+* member
+    - id: int 
+    - publisher_id: int 
+    - name: varchar 
+    - profession: varchar 
+    - email: varchar 
+    - address: text
+    - created_at: datetime
+	- updated_at: datetime 
+
+* book 
+    - id: int 
+    - publisher_id: int 
+    - name: varchar 
+    - author: varchar 
+    - stock: int 
+    - avaliable: boolean (tinyint)
+    - created_at: datetime
+	- updated_at: datetime
+
+* borrow 
+    - id: int 
+    - publisher_id: int 
+    - member_id: int 
+    - book_id: int 
+    - total: int 
+    - date_borrow: datetime
+    - date_return: datetime
+    - created_at: datetime
+	- updated_at: datetime
+
