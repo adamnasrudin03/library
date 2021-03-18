@@ -1,12 +1,19 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"strings"
 
+	"github.com/go-playground/validator/v10"
+)
 type Response struct {
 	Meta Meta        `json:"meta"`
 	Data interface{} `json:"data"`
 }
 
+type ResponseError struct {
+	Meta 	Meta        `json:"meta"`
+	Errors 	interface{} `json:"errors"`
+}
 type Meta struct {
 	Message string `json:"message"`
 	Code    int    `json:"code"`
@@ -35,4 +42,21 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+func APIResponseError(message string, code int, status string, err string) ResponseError {
+	splittedError := strings.Split(err, "\n")
+
+	meta := Meta{
+		Message: message,
+		Code:    code,
+		Status:  status,
+	}
+	jsonResponse := ResponseError{
+		Meta: meta,
+		Errors: splittedError,
+		
+	}
+
+	return jsonResponse
 }
