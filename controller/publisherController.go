@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/adamnasrudin03/library/dto"
@@ -29,6 +30,13 @@ func (c *publisherController) RegisterPublisher(ctx *gin.Context){
 
 		response := helper.APIResponse("Register account failed", http.StatusUnprocessableEntity, "error", errorMessage)
 		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+	
+	if !c.authService.IsDuplicateEmail(input.Email) {
+		errorMessage := fmt.Sprintf("email has been registered \nDuplicate email : %s ", input.Email)
+		response := helper.APIResponseError("Register account failed", http.StatusBadRequest, "error", errorMessage)
+		ctx.JSON(http.StatusConflict, response)
 		return
 	}
 
