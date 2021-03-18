@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/adamnasrudin03/library/dto"
+	"github.com/adamnasrudin03/library/entity"
 	"github.com/adamnasrudin03/library/helper"
 	"github.com/adamnasrudin03/library/service"
 	"github.com/gin-gonic/gin"
@@ -94,4 +95,38 @@ func (c *publisherController) Login(ctx *gin.Context) {
 	response := helper.APIResponse("Login Successfully", http.StatusOK, "success", publisher)
 	ctx.JSON(http.StatusOK, response)
 
+}
+
+func (c *publisherController) Update(ctx *gin.Context) {
+	currentPublisher := ctx.MustGet("currentPublisher").(entity.Publisher)
+
+	var input dto.UpdatePublisher
+	input.ID = currentPublisher.ID
+
+	if input.Name == "" {
+		input.Name = currentPublisher.Name
+	}
+	if input.Position == "" {
+		input.Position = currentPublisher.Position
+	}
+
+	err := ctx.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to update campaign", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	updatedPublisher, err := c.publisherService.UpdatePublisher(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to updated campaign", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to updated campaign", http.StatusOK, "success", updatedPublisher)
+	ctx.JSON(http.StatusOK, response)
 }
