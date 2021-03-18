@@ -1,19 +1,36 @@
 package main
 
 import (
-	"github.com/adamnasrudin03/library/config"
+	"fmt"
 
-	"github.com/gin-gonic/gin"
+	"github.com/adamnasrudin03/library/config"
+	"github.com/adamnasrudin03/library/entity"
+	"github.com/adamnasrudin03/library/repository"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 var (
-	db             *gorm.DB                  = config.SetupDbConnection()
+	db             *gorm.DB                 		= config.SetupDbConnection()
+	publisherRepo 	repository.PublisherRepository  = repository.NewPublisherRepository(db)
 )
 
 func main() {
 	defer config.CloseDbConnection(db)
+
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
+	if err != nil {
+		fmt.Println("error " ,err)
+	}
+	publisher := entity.Publisher{
+		Name: "ADAM nasrudin",
+		Email: "adam@gmail.com",
+		Password: string(passwordHash),
+	}
+	publisherRepo.Save(publisher) 
 
 	router := gin.Default()
 
