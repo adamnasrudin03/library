@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/adamnasrudin03/library/entity"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,8 +29,7 @@ func SetupDbConnection() *gorm.DB {
 	}
 	fmt.Println("Connection Database Success!")
 
-	//nanti kita isi modelnya di sini
-	//db.AutoMigrate()
+	db.AutoMigrate(&entity.Publisher{})
 
 	return db
 }
