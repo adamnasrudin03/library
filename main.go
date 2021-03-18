@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/adamnasrudin03/library/config"
-	"github.com/adamnasrudin03/library/dto"
+	"github.com/adamnasrudin03/library/controller"
 	"github.com/adamnasrudin03/library/repository"
 	"github.com/adamnasrudin03/library/service"
 
@@ -17,18 +17,12 @@ var (
 	publisherRepo 		repository.PublisherRepository  = repository.NewPublisherRepository(db)
 
 	publisherService 	service.PublisherService 		= service.NewPublisherService(publisherRepo)
+	authService			service.AuthService				= service.NewAuthService()
 )
 
 func main() {
 	defer config.CloseDbConnection(db)
-
-	inputPublisher := dto.CreatePublisher{
-		Name: "Test service",
-		Position: "pustakawan",
-		Email: "test@gmail.com",
-		Password: "password",
-	}
-	publisherService.CreatePublisher(inputPublisher)
+	publisherController :=	controller.NewPublisherController(publisherService, authService)
 
 	router := gin.Default()
 
@@ -40,6 +34,10 @@ func main() {
 			"message": "Welcome my application",
 		})
 	})
+
+	api := router.Group("/api/v1")
+
+	api.POST("/auth/publishers", publisherController.RegisterPublisher)
 
 	router.Run()
 }
