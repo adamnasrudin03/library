@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/adamnasrudin03/library/config"
-	"github.com/adamnasrudin03/library/entity"
+	"github.com/adamnasrudin03/library/dto"
 	"github.com/adamnasrudin03/library/repository"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/adamnasrudin03/library/service"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -14,23 +12,23 @@ import (
 )
 
 var (
-	db             *gorm.DB                 		= config.SetupDbConnection()
-	publisherRepo 	repository.PublisherRepository  = repository.NewPublisherRepository(db)
+	db             		*gorm.DB                 		= config.SetupDbConnection()
+
+	publisherRepo 		repository.PublisherRepository  = repository.NewPublisherRepository(db)
+
+	publisherService 	service.PublisherService 		= service.NewPublisherService(publisherRepo)
 )
 
 func main() {
 	defer config.CloseDbConnection(db)
 
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.MinCost)
-	if err != nil {
-		fmt.Println("error " ,err)
+	inputPublisher := dto.CreatePublisher{
+		Name: "Test service",
+		Position: "pustakawan",
+		Email: "test@gmail.com",
+		Password: "password",
 	}
-	publisher := entity.Publisher{
-		Name: "ADAM nasrudin",
-		Email: "adam@gmail.com",
-		Password: string(passwordHash),
-	}
-	publisherRepo.Save(publisher) 
+	publisherService.CreatePublisher(inputPublisher)
 
 	router := gin.Default()
 
