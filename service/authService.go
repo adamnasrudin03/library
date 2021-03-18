@@ -28,12 +28,11 @@ func getSecretKey() string {
 	}
 
 	secretKey := os.Getenv("SECRET_KEY")
-	if secretKey != "" {
+	if secretKey == "" {
 		secretKey = "adamnasrudin_key"
 	}
-	key := []byte(secretKey)
 
-	return string(key)
+	return secretKey
 }
 
 func (s *authService) GenerateToken(userID uint64, userName string) (string, error) {
@@ -43,7 +42,7 @@ func (s *authService) GenerateToken(userID uint64, userName string) (string, err
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
 
-	secretKey := getSecretKey()
+	secretKey := []byte(getSecretKey())
 	signedToken, err := token.SignedString(secretKey)
 	if err != nil {
 		return signedToken, err
