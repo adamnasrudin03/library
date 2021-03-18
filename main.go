@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/adamnasrudin03/library/config"
 	"github.com/adamnasrudin03/library/controller"
+	"github.com/adamnasrudin03/library/middleware"
 	"github.com/adamnasrudin03/library/repository"
 	"github.com/adamnasrudin03/library/service"
 
@@ -22,6 +23,9 @@ var (
 
 func main() {
 	defer config.CloseDbConnection(db)
+
+	authMiddleware := middleware.NewAuthMiddleware(authService, publisherService)
+
 	publisherController :=	controller.NewPublisherController(publisherService, authService)
 
 	router := gin.Default()
@@ -39,6 +43,7 @@ func main() {
 
 	api.POST("/auth/publishers", publisherController.RegisterPublisher)
 	api.POST("/auth/sessions", publisherController.Login)
+	api.PUT("/publishers",authMiddleware.AuthorizationMiddleware() ,publisherController.Update)
 
 	router.Run()
 }
