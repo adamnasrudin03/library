@@ -10,7 +10,7 @@ import (
 
 
 type AuthService interface {
-	GenerateToken(userID int, userName string)  (string, error)
+	GenerateToken(userID uint64, userName string)  (string, error)
 	ValidateToken(token string) (*jwt.Token, error)
 }
 
@@ -36,7 +36,7 @@ func getSecretKey() string {
 	return string(key)
 }
 
-func (s *authService) GenerateToken(userID int, userName string) (string, error) {
+func (s *authService) GenerateToken(userID uint64, userName string) (string, error) {
 	payload := jwt.MapClaims{}
 	payload["user_id"] = userID
 	payload["user_name"] = userName
