@@ -13,6 +13,8 @@ import (
 type PublisherService interface {
 	CreatePublisher(input dto.CreatePublisher) (entity.Publisher, error)
 	LoginPublisher(input dto.LoginPublisher) (entity.Publisher, error)
+	FindByIdPublisher(ID uint64) (entity.Publisher, error)
+	UpdatePublisher(input dto.UpdatePublisher) (entity.Publisher, error)
 }
 
 type service struct {
@@ -63,4 +65,35 @@ func (s *service) LoginPublisher(input dto.LoginPublisher) (entity.Publisher, er
 	}
 
 	return publisher, nil
+}
+
+func (s *service) FindByIdPublisher(ID uint64) (entity.Publisher, error) {
+	publisher, err := s.repository.FindById(ID)
+	if err != nil {
+		return publisher, err
+	}
+
+	if publisher.ID == 0 {
+		return publisher, errors.New("publisher not found on with that ID")
+	}
+
+	return publisher, nil
+}
+
+func (s *service) UpdatePublisher(input dto.UpdatePublisher) (entity.Publisher, error) {
+	publisher, err := s.repository.FindById(input.ID)
+	if err != nil {
+		return publisher, err
+	}
+
+	publisher.Name = input.Name
+	publisher.Email = input.Email
+	publisher.Password = input.Password
+
+	updatedPublisher, err := s.repository.Update(publisher)
+	if err != nil {
+		return updatedPublisher, err
+	}
+
+	return updatedPublisher, nil
 }
