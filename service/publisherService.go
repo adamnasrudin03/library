@@ -88,7 +88,14 @@ func (s *service) UpdatePublisher(input dto.UpdatePublisher) (entity.Publisher, 
 
 	publisher.Name = input.Name
 	publisher.Email = input.Email
-	publisher.Password = input.Password
+	publisher.Position = input.Position
+	
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+	if err != nil {
+		return publisher, err
+	}
+
+	publisher.Password = string(passwordHash)
 
 	updatedPublisher, err := s.repository.Update(publisher)
 	if err != nil {
