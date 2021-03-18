@@ -10,6 +10,8 @@ type PublisherRepository interface {
 	Save(publisher entity.Publisher) (entity.Publisher, error)
 	IsDuplicateEmail(email string) (tx *gorm.DB)
 	FindByEmail(email string) (entity.Publisher, error)
+	FindById(ID uint64) (entity.Publisher, error) 
+	Update(publisher entity.Publisher) (entity.Publisher, error)
 }
 
 type repository struct {
@@ -39,6 +41,27 @@ func (r *repository) FindByEmail(email string) (entity.Publisher, error) {
 	var publisher entity.Publisher
 
 	err := r.db.Where("email = ?", email).Find(&publisher).Error
+	if err != nil {
+		return publisher, err
+	}
+
+	return publisher, nil
+}
+
+func (r *repository) FindById(ID uint64) (entity.Publisher, error)  {
+	var publisher entity.Publisher
+
+	err := r.db.Where("ID = ?", ID).Find(&publisher).Error
+
+	if err != nil {
+		return publisher, err
+	}
+
+	return publisher, nil
+}
+
+func (r *repository) Update(publisher entity.Publisher) (entity.Publisher, error) {
+	err := r.db.Save(&publisher).Error
 	if err != nil {
 		return publisher, err
 	}
