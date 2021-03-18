@@ -17,7 +17,7 @@ var (
 	publisherRepo 		repository.PublisherRepository  = repository.NewPublisherRepository(db)
 
 	publisherService 	service.PublisherService 		= service.NewPublisherService(publisherRepo)
-	authService			service.AuthService				= service.NewAuthService()
+	authService			service.AuthService				= service.NewAuthService(publisherRepo)
 )
 
 func main() {
