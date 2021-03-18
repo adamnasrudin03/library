@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/adamnasrudin03/library/dto"
 	"github.com/adamnasrudin03/library/entity"
 	"github.com/adamnasrudin03/library/repository"
@@ -10,6 +12,7 @@ import (
 
 type PublisherService interface {
 	CreatePublisher(input dto.CreatePublisher) (entity.Publisher, error)
+	LoginPublisher(input dto.LoginPublisher) (entity.Publisher, error)
 }
 
 type service struct {
@@ -39,4 +42,25 @@ func (s *service) CreatePublisher(input dto.CreatePublisher) (entity.Publisher, 
 	}
 
 	return newPublisher, nil
+}
+
+func (s *service) LoginPublisher(input dto.LoginPublisher) (entity.Publisher, error) {
+	email := input.Email
+	password := input.Password
+
+	publisher, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return publisher, err
+	}
+
+	if publisher.ID == 0 {
+		return publisher, errors.New("publisher no found on that email")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(publisher.Password), []byte(password))
+	if err != nil {
+		return publisher, err
+	}
+
+	return publisher, nil
 }
