@@ -35,7 +35,7 @@ func (c *publisherController) RegisterPublisher(ctx *gin.Context){
 	
 	if !c.authService.IsDuplicateEmail(input.Email) {
 		errorMessage := fmt.Sprintf("email has been registered \nDuplicate email : %s ", input.Email)
-		response := helper.APIResponseError("Register account failed", http.StatusBadRequest, "error", errorMessage)
+		response := helper.APIResponseError("Register account failed", http.StatusConflict, "error", errorMessage)
 		ctx.JSON(http.StatusConflict, response)
 		return
 	}
