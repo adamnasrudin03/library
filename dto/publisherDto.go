@@ -7,3 +7,9 @@ type CreatePublisher struct {
 	Email    	string `json:"email" form:"email" binding:"required,email" `
 	Password 	string `json:"password" form:"password" binding:"required"`
 }
+
+//LoginPublisher is used when client post
+type LoginPublisher struct {
+	Email    	string `json:"email" form:"email" binding:"required,email" `
+	Password 	string `json:"password" form:"password" binding:"required"`
+}
