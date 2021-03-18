@@ -10,7 +10,7 @@ type Publisher struct {
 	Email    	string  	`gorm:"uniqueIndex;type:varchar(255)" json:"email"`
 	Password 	string  	`gorm:"->;<-;not null" json:"-"`
 	Token    	string   	`gorm:"-" json:"token,omitempty"`
-	CreatedAt   time.Time 	
-	UpdatedAt   time.Time	
+	CreatedAt   time.Time 	`json:"-"`
+	UpdatedAt   time.Time	`json:"-"`
 
 }
