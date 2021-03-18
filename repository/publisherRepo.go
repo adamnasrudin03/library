@@ -8,6 +8,7 @@ import (
 
 type PublisherRepository interface {
 	Save(publisher entity.Publisher) (entity.Publisher, error)
+	IsDuplicateEmail(email string) (tx *gorm.DB)
 }
 
 type repository struct {
@@ -18,6 +19,11 @@ func NewPublisherRepository(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
+
+func (r *repository) IsDuplicateEmail(email string) (tx *gorm.DB) {
+	var publisher entity.Publisher
+	return r.db.Where("email = ?", email).Take(&publisher)
+}
 
 func (r *repository) Save(publisher entity.Publisher) (entity.Publisher, error) {
 	err := r.db.Create(&publisher).Error
