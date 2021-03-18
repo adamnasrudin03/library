@@ -16,9 +16,9 @@ type LoginPublisher struct {
 
 //UpdatePublisher is used when client post
 type UpdatePublisher struct {
-	ID      	uint64 `json:"id" form:"id"`
-	Name     	string `json:"name" form:"name" binding:"required"`
-	Position    string `json:"position" form:"position" binding:"required"`
+	ID      	uint64 `json:"id" form:"id" binding:"required"`
+	Name     	string `json:"name" form:"name" `
+	Position    string `json:"position" form:"position" `
 	Email    	string `json:"email" form:"email" binding:"required,email" `
-	Password 	string `json:"password" form:"password" binding:"required"`
+	Password 	string `json:"password,omitempty" form:"password,omitempty" binding:"required" `
 }
