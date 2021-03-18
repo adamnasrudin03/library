@@ -38,6 +38,7 @@ func main() {
 	api := router.Group("/api/v1")
 
 	api.POST("/auth/publishers", publisherController.RegisterPublisher)
+	api.POST("/auth/sessions", publisherController.Login)
 
 	router.Run()
 }
