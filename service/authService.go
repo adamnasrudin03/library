@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 
+	"github.com/adamnasrudin03/library/repository"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/joho/godotenv"
 )
@@ -12,13 +13,15 @@ import (
 type AuthService interface {
 	GenerateToken(userID uint64, userName string)  (string, error)
 	ValidateToken(token string) (*jwt.Token, error)
+	IsDuplicateEmail(email string) bool
 }
 
 type authService struct {
+	publisherReopisory repository.PublisherRepository
 }
 
-func NewAuthService() *authService {
-	return &authService{}
+func NewAuthService(publisherReopisory repository.PublisherRepository) *authService {
+	return &authService{publisherReopisory}
 }
 
 func getSecretKey() string {
@@ -71,3 +74,9 @@ func (s *authService) ValidateToken(encodedToken string) (*jwt.Token, error) {
 	return token, nil
 }
 
+
+
+func (service *authService) IsDuplicateEmail(email string) bool {
+	res := service.publisherReopisory.IsDuplicateEmail(email)
+	return !(res.Error == nil)
+}
