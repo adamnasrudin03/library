@@ -60,3 +60,38 @@ func (c *publisherController) RegisterPublisher(ctx *gin.Context){
 	ctx.JSON(http.StatusOK, response)
 
 }
+
+func (c *publisherController) Login(ctx *gin.Context) {
+	var input dto.LoginPublisher
+
+	err := ctx.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	publisher, err := c.publisherService.LoginPublisher(input)
+	if err != nil {
+		errorMessage := gin.H{"errors": err.Error()}
+
+		response := helper.APIResponse("Login failed", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	token, err := c.authService.GenerateToken(publisher.ID, publisher.Name)
+	if err != nil {
+		response := helper.APIResponse("Login failed", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	publisher.Token = token
+	response := helper.APIResponse("Login Successfully", http.StatusOK, "success", publisher)
+	ctx.JSON(http.StatusOK, response)
+
+}
