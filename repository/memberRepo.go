@@ -8,6 +8,7 @@ import (
 
 type MemberRepository interface {
 	Save(member entity.Member) (entity.Member, error)
+	FindAll() ([]entity.Member, error)
 }
 
 type memberRepository struct {
@@ -26,4 +27,15 @@ func (r *memberRepository) Save(member entity.Member) (entity.Member, error) {
 	r.db.Preload("Publisher").Find(&member)
 
 	return member, nil
+}
+
+func (r *memberRepository) FindAll() ([]entity.Member, error) {
+	var members []entity.Member
+
+	err := r.db.Preload("Publisher").Find(&members).Error
+	if err != nil {
+		return members, err
+	}
+
+	return members, nil
 }
