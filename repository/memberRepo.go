@@ -17,3 +17,12 @@ type memberRepository struct {
 func NewMemberRepository(db *gorm.DB) *memberRepository {
 	return &memberRepository{db}
 }
+
+func (r *memberRepository) Save(member entity.Member) (entity.Member, error) {
+	err := r.db.Create(&member).Error
+	if err != nil {
+		return member, err
+	}
+
+	return member, nil
+}
