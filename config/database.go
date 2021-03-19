@@ -29,7 +29,7 @@ func SetupDbConnection() *gorm.DB {
 	}
 	fmt.Println("Connection Database Success!")
 
-	db.AutoMigrate(&entity.Publisher{})
+	db.AutoMigrate(&entity.Publisher{}, &entity.Member{})
 
 	return db
 }
