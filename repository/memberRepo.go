@@ -9,6 +9,7 @@ import (
 type MemberRepository interface {
 	Save(member entity.Member) (entity.Member, error)
 	FindAll() ([]entity.Member, error)
+	FindByID(memberID uint64) (entity.Member, error)
 }
 
 type memberRepository struct {
@@ -38,4 +39,15 @@ func (r *memberRepository) FindAll() ([]entity.Member, error) {
 	}
 
 	return members, nil
+}
+
+func (r *memberRepository) FindByID(memberID uint64) (entity.Member, error){
+	var member entity.Member
+
+	err := r.db.Preload("Publisher").Where("id = ?", memberID).Find(&member).Error
+	if err != nil {
+		return member, err
+	}
+
+	return member, nil
 }
