@@ -12,6 +12,7 @@ type MemberService interface {
 	FindAllMember() ([]entity.Member, error)
 	FindByIDMember(memberID uint64) (entity.Member, error)
 	UpdateMember(memberID uint64, input dto.UpdateMember)  (entity.Member, error)
+	DeleteByIDMember(memberID uint64) (entity.Member, error)
 }
 
 type memberService struct {
@@ -75,4 +76,13 @@ func (s *memberService)	UpdateMember(memberID uint64, input dto.UpdateMember) (e
 	}
 
 	return newMember, nil
+}
+
+func (s *memberService) DeleteByIDMember(memberID uint64) (entity.Member, error) {
+	member, err := s.repository.DeleteByID(memberID)
+	if err != nil {
+		return member, err
+	}
+	
+	return member, nil
 }
