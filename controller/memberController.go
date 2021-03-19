@@ -124,3 +124,22 @@ func (c *memberController) UpdateMember(ctx *gin.Context) {
 	response := helper.APIResponse("Success to updated member", http.StatusOK, "success", updateMember)
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (c *memberController) DeleteByIDMember(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	member, err := c.memberService.DeleteByIDMember(id)
+	if err != nil {
+		response := helper.APIResponse("Error to delete member", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Deleted member", http.StatusOK, "success", member)
+	ctx.JSON(http.StatusOK, response)
+}
