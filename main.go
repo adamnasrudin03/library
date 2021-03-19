@@ -52,6 +52,7 @@ func main() {
 	api.GET("/members", authMiddleware.AuthorizationMiddleware(), memberController.FindAllMember)
 	api.GET("/members/:id", authMiddleware.AuthorizationMiddleware(), memberController.FindByIDMember)
 	api.PUT("/members/:id/update", authMiddleware.AuthorizationMiddleware(), memberController.UpdateMember)
+	api.DELETE("/members/:id/delete", authMiddleware.AuthorizationMiddleware(), memberController.DeleteByIDMember)
 
 	router.Run()
 }
