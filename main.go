@@ -16,9 +16,11 @@ var (
 	db             		*gorm.DB                 		= config.SetupDbConnection()
 
 	publisherRepo 		repository.PublisherRepository  = repository.NewPublisherRepository(db)
+	memberRepo 			repository.MemberRepository 	= repository.NewMemberRepository(db)
 
 	publisherService 	service.PublisherService 		= service.NewPublisherService(publisherRepo)
 	authService			service.AuthService				= service.NewAuthService(publisherRepo)
+	memberService 		service.MemberService 			= service.NewMemberService(memberRepo)
 )
 
 func main() {
@@ -27,6 +29,7 @@ func main() {
 	authMiddleware := middleware.NewAuthMiddleware(authService, publisherService)
 
 	publisherController :=	controller.NewPublisherController(publisherService, authService)
+	memberController := controller.NewMemberController(memberService)
 
 	router := gin.Default()
 
@@ -44,6 +47,8 @@ func main() {
 	api.POST("/auth/publishers", publisherController.RegisterPublisher)
 	api.POST("/auth/sessions", publisherController.Login)
 	api.PUT("/publishers",authMiddleware.AuthorizationMiddleware() ,publisherController.Update)
+
+	api.POST("/members", authMiddleware.AuthorizationMiddleware(), memberController.CreateMember)
 
 	router.Run()
 }
