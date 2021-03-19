@@ -83,3 +83,44 @@ func (c *memberController) FindByIDMember(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, response)
 	}
 }
+
+func (c *memberController) UpdateMember(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	member, _ := c.memberService.FindByIDMember(id)
+	if (member == entity.Member{}) {
+		response := helper.APIResponse("Member not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+	}
+
+	var input dto.UpdateMember
+
+	if input.Email == "" {
+		input.Email = member.Email
+	}
+
+	err = ctx.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to update member", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	updateMember, err := c.memberService.UpdateMember(id, input)
+	if err != nil {
+		response := helper.APIResponse("Failed to updated member", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to updated member", http.StatusOK, "success", updateMember)
+	ctx.JSON(http.StatusOK, response)
+}
