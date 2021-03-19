@@ -23,6 +23,7 @@
     - name: varchar 
     - author: varchar 
     - stock: int 
+    - total_borrowers: int
     - avaliable: boolean (tinyint)
     - created_at: datetime
 	- updated_at: datetime
