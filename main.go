@@ -49,6 +49,7 @@ func main() {
 	api.PUT("/publishers",authMiddleware.AuthorizationMiddleware() ,publisherController.Update)
 
 	api.POST("/members", authMiddleware.AuthorizationMiddleware(), memberController.CreateMember)
+	api.GET("/members", authMiddleware.AuthorizationMiddleware(), memberController.FindAllMember)
 
 	router.Run()
 }
