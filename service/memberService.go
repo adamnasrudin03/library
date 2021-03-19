@@ -9,6 +9,7 @@ import (
 
 type MemberService interface {
 	CreateMember(input dto.CreateMember) (entity.Member, error)
+	FindAllMember() ([]entity.Member, error)
 }
 
 type memberService struct {
@@ -34,4 +35,13 @@ func (s *memberService) CreateMember(input dto.CreateMember) (entity.Member, err
 	}
 
 	return newMember, nil
+}
+
+func (s *memberService) FindAllMember() ([]entity.Member, error) {
+	members, err := s.repository.FindAll()
+	if err != nil {
+		return members, err
+	}
+	
+	return members, nil
 }
