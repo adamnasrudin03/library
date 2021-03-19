@@ -10,6 +10,7 @@ import (
 type MemberService interface {
 	CreateMember(input dto.CreateMember) (entity.Member, error)
 	FindAllMember() ([]entity.Member, error)
+	FindByIDMember(memberID uint64) (entity.Member, error)
 }
 
 type memberService struct {
@@ -44,4 +45,13 @@ func (s *memberService) FindAllMember() ([]entity.Member, error) {
 	}
 	
 	return members, nil
+}
+
+func (s *memberService) FindByIDMember(memberID uint64) (entity.Member, error) {
+	member, err := s.repository.FindByID(memberID)
+	if err != nil {
+		return member, err
+	}
+	
+	return member, nil
 }
