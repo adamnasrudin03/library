@@ -10,6 +10,7 @@ type MemberRepository interface {
 	Save(member entity.Member) (entity.Member, error)
 	FindAll() ([]entity.Member, error)
 	FindByID(memberID uint64) (entity.Member, error)
+	Update(member entity.Member) (entity.Member, error)
 }
 
 type memberRepository struct {
@@ -48,6 +49,16 @@ func (r *memberRepository) FindByID(memberID uint64) (entity.Member, error){
 	if err != nil {
 		return member, err
 	}
+
+	return member, nil
+}
+
+func (r *memberRepository) Update(member entity.Member) (entity.Member, error) {
+	err := r.db.Save(&member).Error
+	if err != nil {
+		return member, err
+	}
+	r.db.Preload("Publisher").Find(&member)
 
 	return member, nil
 }
