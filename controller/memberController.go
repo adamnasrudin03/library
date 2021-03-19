@@ -46,3 +46,15 @@ func (c *memberController) CreateMember(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 
 }
+
+func (c *memberController) FindAllMember(ctx *gin.Context) {
+	members, err := c.memberService.FindAllMember()
+	if err != nil {
+		response := helper.APIResponse("Error to get members", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("List of members", http.StatusOK, "success", members)
+	ctx.JSON(http.StatusOK, response)
+}
