@@ -11,6 +11,7 @@ type MemberService interface {
 	CreateMember(input dto.CreateMember) (entity.Member, error)
 	FindAllMember() ([]entity.Member, error)
 	FindByIDMember(memberID uint64) (entity.Member, error)
+	UpdateMember(memberID uint64, input dto.UpdateMember)  (entity.Member, error)
 }
 
 type memberService struct {
@@ -54,4 +55,24 @@ func (s *memberService) FindByIDMember(memberID uint64) (entity.Member, error) {
 	}
 	
 	return member, nil
+}
+
+func (s *memberService)	UpdateMember(memberID uint64, input dto.UpdateMember) (entity.Member, error){
+	member, err := s.repository.FindByID(memberID)
+	if err != nil {
+		return member, err
+	}
+
+	member.Name = input.Name
+	member.Gender = input.Gender
+	member.Profession = input.Profession
+	member.Email = input.Email
+	member.Address = input.Address
+
+	newMember, err := s.repository.Update(member)
+	if err != nil {
+		return newMember, err
+	}
+
+	return newMember, nil
 }
