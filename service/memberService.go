@@ -26,7 +26,7 @@ func (s *memberService) CreateMember(input dto.CreateMember) (entity.Member, err
 	member.Profession = input.Profession
 	member.Email = input.Email
 	member.Address = input.Address
-	member.Publisher.ID = input.PublisherID
+	member.PublisherID = input.Publisher.ID
 
 	newMember, err := s.repository.Save(member)
 	if err != nil {
