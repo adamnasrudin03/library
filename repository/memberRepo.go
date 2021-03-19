@@ -23,6 +23,7 @@ func (r *memberRepository) Save(member entity.Member) (entity.Member, error) {
 	if err != nil {
 		return member, err
 	}
+	r.db.Preload("Publisher").Find(&member)
 
 	return member, nil
 }
