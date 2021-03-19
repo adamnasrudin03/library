@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/adamnasrudin03/library/dto"
 	"github.com/adamnasrudin03/library/entity"
@@ -57,4 +58,28 @@ func (c *memberController) FindAllMember(ctx *gin.Context) {
 
 	response := helper.APIResponse("List of members", http.StatusOK, "success", members)
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *memberController) FindByIDMember(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	member, err := c.memberService.FindByIDMember(id)
+	if err != nil {
+		response := helper.APIResponse("Error to get member", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	if (member == entity.Member{}) {
+		response := helper.APIResponse("Member not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+	} else {
+		response := helper.APIResponse("List of Detail member", http.StatusOK, "success", member)
+		ctx.JSON(http.StatusOK, response)
+	}
 }
