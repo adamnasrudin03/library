@@ -10,6 +10,7 @@ type BookRepository interface {
 	Save(book entity.Book) (entity.Book, error)
 	FindAll() ([]entity.Book, error)
 	FindByID(bookID uint64) (entity.Book, error)
+	Update(book entity.Book) (entity.Book, error)
 }
 
 type bookRepository struct {
@@ -48,6 +49,16 @@ func (r *bookRepository) FindByID(bookID uint64) (entity.Book, error) {
 	if err != nil {
 		return book, err
 	}
+
+	return book, nil
+}
+
+func (r *bookRepository) Update(book entity.Book) (entity.Book, error) {
+	err := r.db.Save(&book).Error
+	if err != nil {
+		return book, err
+	}
+	r.db.Preload("Publisher").Find(&book)
 
 	return book, nil
 }
