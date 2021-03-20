@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/adamnasrudin03/library/dto"
 	"github.com/adamnasrudin03/library/entity"
@@ -58,4 +59,28 @@ func (c *bookController) FindAllBook(ctx *gin.Context) {
 
 	response := helper.APIResponse("List of books", http.StatusOK, "success", books)
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *bookController) FindByIDBook(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	book, err := c.bookService.FindByIDBook(id)
+	if err != nil {
+		response := helper.APIResponse("Error to get book", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	if (book == entity.Book{}) {
+		response := helper.APIResponse("Book not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+	} else {
+		response := helper.APIResponse("List of Detail book", http.StatusOK, "success", book)
+		ctx.JSON(http.StatusOK, response)
+	}
 }
