@@ -58,6 +58,7 @@ func main() {
 	api.DELETE("/members/:id/delete", authMiddleware.AuthorizationMiddleware(), memberController.DeleteByIDMember)
 
 	api.POST("/books", authMiddleware.AuthorizationMiddleware(), bookController.CreateBook)
+	api.GET("/books", authMiddleware.AuthorizationMiddleware(), bookController.FindAllBook)
 
 	router.Run()
 }
