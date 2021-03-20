@@ -17,10 +17,12 @@ var (
 
 	publisherRepo 		repository.PublisherRepository  = repository.NewPublisherRepository(db)
 	memberRepo 			repository.MemberRepository 	= repository.NewMemberRepository(db)
+	bookRepo			repository.BookRepository		= repository.NewBookRepository(db)
 
 	publisherService 	service.PublisherService 		= service.NewPublisherService(publisherRepo)
 	authService			service.AuthService				= service.NewAuthService(publisherRepo)
 	memberService 		service.MemberService 			= service.NewMemberService(memberRepo)
+	bookService			service.BookService				= service.NewBookService(bookRepo)
 )
 
 func main() {
@@ -30,6 +32,7 @@ func main() {
 
 	publisherController :=	controller.NewPublisherController(publisherService, authService)
 	memberController := controller.NewMemberController(memberService)
+	bookController := controller.NewBookController(bookService)
 
 	router := gin.Default()
 
@@ -53,6 +56,8 @@ func main() {
 	api.GET("/members/:id", authMiddleware.AuthorizationMiddleware(), memberController.FindByIDMember)
 	api.PUT("/members/:id/update", authMiddleware.AuthorizationMiddleware(), memberController.UpdateMember)
 	api.DELETE("/members/:id/delete", authMiddleware.AuthorizationMiddleware(), memberController.DeleteByIDMember)
+
+	api.POST("/books", authMiddleware.AuthorizationMiddleware(), bookController.CreateBook)
 
 	router.Run()
 }
