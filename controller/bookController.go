@@ -127,3 +127,22 @@ func (c *bookController) UpdateBook(ctx *gin.Context) {
 	response := helper.APIResponse("Success to updated book", http.StatusOK, "success", updateBook)
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (c *bookController) DeleteByIDBook(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	book, err := c.bookService.DeleteByIDBook(id)
+	if err != nil {
+		response := helper.APIResponse("Error to delete book", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Deleted book", http.StatusOK, "success", book)
+	ctx.JSON(http.StatusOK, response)
+}
