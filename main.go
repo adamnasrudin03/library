@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/adamnasrudin03/library/config"
 	"github.com/adamnasrudin03/library/controller"
 	"github.com/adamnasrudin03/library/middleware"
@@ -59,6 +61,14 @@ func main() {
 
 	api.POST("/books", authMiddleware.AuthorizationMiddleware(), bookController.CreateBook)
 	api.GET("/books", authMiddleware.AuthorizationMiddleware(), bookController.FindAllBook)
+
+	router.NoRoute(func(c *gin.Context) {
+    	c.JSON(http.StatusNotFound, gin.H{
+			"message": "Page not found",
+			"code": http.StatusNotFound,
+			"status": "error",
+		})
+	})
 
 	router.Run()
 }
