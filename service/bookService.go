@@ -9,6 +9,7 @@ import (
 
 type BookService interface {
 	CreateBook(input dto.CreateBook) (entity.Book, error)
+	FindAllBook() ([]entity.Book, error)
 }
 
 type bookService struct {
@@ -35,4 +36,13 @@ func (s *bookService) CreateBook(input dto.CreateBook) (entity.Book, error) {
 	}
 
 	return newBook, nil
+}
+
+func (s *bookService) FindAllBook() ([]entity.Book, error) {
+	books, err := s.repository.FindAll()
+	if err != nil {
+		return books, err
+	}
+	
+	return books, nil
 }
