@@ -11,6 +11,7 @@ type BookRepository interface {
 	FindAll() ([]entity.Book, error)
 	FindByID(bookID uint64) (entity.Book, error)
 	Update(book entity.Book) (entity.Book, error)
+	DeleteByID(bookID uint64) (entity.Book, error)
 }
 
 type bookRepository struct {
@@ -59,6 +60,17 @@ func (r *bookRepository) Update(book entity.Book) (entity.Book, error) {
 		return book, err
 	}
 	r.db.Preload("Publisher").Find(&book)
+
+	return book, nil
+}
+
+func (r *bookRepository) DeleteByID(bookID uint64) (entity.Book, error) {
+	var book entity.Book
+	
+	err := r.db.Preload("Publisher").Where("id = ?", bookID).Delete(&book).Error
+	if err != nil {
+		return book, err
+	}
 
 	return book, nil
 }
