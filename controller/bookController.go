@@ -47,3 +47,15 @@ func (c *bookController) CreateBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 
 }
+
+func (c *bookController) FindAllBook(ctx *gin.Context) {
+	books, err := c.bookService.FindAllBook()
+	if err != nil {
+		response := helper.APIResponse("Error to get books", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("List of books", http.StatusOK, "success", books)
+	ctx.JSON(http.StatusOK, response)
+}
