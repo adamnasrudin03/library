@@ -10,6 +10,7 @@ import (
 type BookService interface {
 	CreateBook(input dto.CreateBook) (entity.Book, error)
 	FindAllBook() ([]entity.Book, error)
+	FindByIDBook(bookID uint64) (entity.Book, error)
 }
 
 type bookService struct {
@@ -45,4 +46,13 @@ func (s *bookService) FindAllBook() ([]entity.Book, error) {
 	}
 	
 	return books, nil
+}
+
+func (s *bookService) FindByIDBook(bookID uint64) (entity.Book, error) {
+	book, err := s.repository.FindByID(bookID)
+	if err != nil {
+		return book, err
+	}
+	
+	return book, nil
 }
