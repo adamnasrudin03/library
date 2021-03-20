@@ -11,6 +11,7 @@ type BookService interface {
 	CreateBook(input dto.CreateBook) (entity.Book, error)
 	FindAllBook() ([]entity.Book, error)
 	FindByIDBook(bookID uint64) (entity.Book, error)
+	UpdateBook(bookID uint64, input dto.UpdateBook) (entity.Book, error)
 }
 
 type bookService struct {
@@ -55,4 +56,25 @@ func (s *bookService) FindByIDBook(bookID uint64) (entity.Book, error) {
 	}
 	
 	return book, nil
+}
+
+func (s *bookService) UpdateBook(bookID uint64, input dto.UpdateBook) (entity.Book, error) {
+	book, err := s.repository.FindByID(bookID)
+	if err != nil {
+		return book, err
+	}
+	
+	book.Name = input.Name
+	book.Author = input.Author
+	book.InitialStock = input.InitialStock
+	book.CurrentStock = input.CurrentStock
+	book.Avaliable = input.Avaliable
+	book.Publisher.ID = input.Publisher.ID
+
+	newBook, err := s.repository.Update(book)
+	if err != nil {
+		return newBook, err
+	}
+
+	return newBook, nil
 }
