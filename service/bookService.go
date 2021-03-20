@@ -12,6 +12,7 @@ type BookService interface {
 	FindAllBook() ([]entity.Book, error)
 	FindByIDBook(bookID uint64) (entity.Book, error)
 	UpdateBook(bookID uint64, input dto.UpdateBook) (entity.Book, error)
+	DeleteByIDBook(bookID uint64) (entity.Book, error)
 }
 
 type bookService struct {
@@ -77,4 +78,13 @@ func (s *bookService) UpdateBook(bookID uint64, input dto.UpdateBook) (entity.Bo
 	}
 
 	return newBook, nil
+}
+
+func (s *bookService) DeleteByIDBook(bookID uint64) (entity.Book, error) {
+	book, err := s.repository.DeleteByID(bookID)
+	if err != nil {
+		return book, err
+	}
+	
+	return book, nil
 }
