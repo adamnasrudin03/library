@@ -84,3 +84,46 @@ func (c *bookController) FindByIDBook(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, response)
 	}
 }
+
+func (c *bookController) UpdateBook(ctx *gin.Context) {
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		response := helper.APIResponseError("Param id not found / did not match", http.StatusBadRequest, "error", err.Error())
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	book, _ := c.bookService.FindByIDBook(id)
+	if (book == entity.Book{}) {
+		response := helper.APIResponse("Book not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+	}
+
+	var input dto.UpdateBook
+	if input.InitialStock == 0 {
+		input.InitialStock = book.InitialStock
+	}
+
+	currentPublisher := ctx.MustGet("currentPublisher").(entity.Publisher)
+	input.Publisher = currentPublisher
+
+	err = ctx.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to update book", http.StatusUnprocessableEntity, "error", errorMessage)
+		ctx.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	updateBook, err := c.bookService.UpdateBook(id, input)
+	if err != nil {
+		response := helper.APIResponse("Failed to updated book", http.StatusBadRequest, "error", nil)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to updated book", http.StatusOK, "success", updateBook)
+	ctx.JSON(http.StatusOK, response)
+}
