@@ -62,6 +62,7 @@ func main() {
 	api.POST("/books", authMiddleware.AuthorizationMiddleware(), bookController.CreateBook)
 	api.GET("/books", authMiddleware.AuthorizationMiddleware(), bookController.FindAllBook)
 	api.GET("/books/:id", authMiddleware.AuthorizationMiddleware(), bookController.FindByIDBook)
+	api.PUT("/books/:id/update", authMiddleware.AuthorizationMiddleware(), bookController.UpdateBook)
 
 	router.NoRoute(func(c *gin.Context) {
     	c.JSON(http.StatusNotFound, gin.H{
