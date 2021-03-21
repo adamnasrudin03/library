@@ -134,7 +134,14 @@ func (c *memberController) DeleteByIDMember(ctx *gin.Context) {
 		return
 	}
 
-	member, err := c.memberService.DeleteByIDMember(id)
+	member, _ := c.memberService.FindByIDMember(id)
+	if (member == entity.Member{}) {
+		response := helper.APIResponse("Member not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+		return
+	}
+
+	member, err = c.memberService.DeleteByIDMember(id)
 	if err != nil {
 		response := helper.APIResponse("Error to delete member", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
