@@ -69,6 +69,7 @@ func (s *bookService) UpdateBook(bookID uint64, input dto.UpdateBook) (entity.Bo
 	book.Author = input.Author
 	book.InitialStock = input.InitialStock
 	book.CurrentStock = input.CurrentStock
+	book.TotalBorrowers = input.TotalBorrowers
 	book.Avaliable = input.Avaliable
 	book.Publisher.ID = input.Publisher.ID
 
