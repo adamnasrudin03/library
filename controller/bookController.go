@@ -97,6 +97,7 @@ func (c *bookController) UpdateBook(ctx *gin.Context) {
 	if (book == entity.Book{}) {
 		response := helper.APIResponse("Book not found", http.StatusNotFound, "success", nil)
 		ctx.JSON(http.StatusNotFound, response)
+		return
 	}
 
 	var input dto.UpdateBook
