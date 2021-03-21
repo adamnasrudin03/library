@@ -148,6 +148,6 @@ func (c *memberController) DeleteByIDMember(ctx *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Deleted member", http.StatusOK, "success", member)
+	response := helper.APIResponse("Deleted member", http.StatusOK, "success", nil)
 	ctx.JSON(http.StatusOK, response)
 }

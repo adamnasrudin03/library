@@ -151,6 +151,6 @@ func (c *bookController) DeleteByIDBook(ctx *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("Deleted book", http.StatusOK, "success", book)
+	response := helper.APIResponse("Deleted book", http.StatusOK, "success", nil)
 	ctx.JSON(http.StatusOK, response)
 }
