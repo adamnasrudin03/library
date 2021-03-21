@@ -136,8 +136,15 @@ func (c *bookController) DeleteByIDBook(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
+	
+	book, _ := c.bookService.FindByIDBook(id)
+	if (book == entity.Book{}) {
+		response := helper.APIResponse("Book not found", http.StatusNotFound, "success", nil)
+		ctx.JSON(http.StatusNotFound, response)
+		return
+	}
 
-	book, err := c.bookService.DeleteByIDBook(id)
+	book, err = c.bookService.DeleteByIDBook(id)
 	if err != nil {
 		response := helper.APIResponse("Error to delete book", http.StatusBadRequest, "error", nil)
 		ctx.JSON(http.StatusBadRequest, response)
