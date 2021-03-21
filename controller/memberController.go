@@ -96,6 +96,7 @@ func (c *memberController) UpdateMember(ctx *gin.Context) {
 	if (member == entity.Member{}) {
 		response := helper.APIResponse("Member not found", http.StatusNotFound, "success", nil)
 		ctx.JSON(http.StatusNotFound, response)
+		return
 	}
 
 	var input dto.UpdateMember
